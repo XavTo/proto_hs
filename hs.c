@@ -57,14 +57,16 @@ int my_game(sfRenderWindow *window, card_t *card, card_t *carden)
 
 int choose_card(sfRenderWindow *window)
 {
-    card_t *card = malloc(sizeof(card_t) * 2);
-    card_t *carden = malloc(sizeof(card_t) * 2);
+    int i = 1;
+    card_t *card = malloc(sizeof(card_t) * i);
+    card_t *carden = malloc(sizeof(card_t) * i);
     card[0].pos.x = 400, card[0].pos.y = 300;
     card[0].save.x = 400, card[0].save.y = 300;
     card[0].name = "pic/minions/magi.jpg";
     card[0].pv = 7, card[0].attack = 6, card[0].cost = 6;
     card[0].shield = false, card[0].provoc = false;
 
+    i++, card = realloc(card, sizeof(card_t) * i);
     card[1].pos.x = 600, card[1].pos.y = 300;
     card[1].save.x = 600, card[1].save.y = 300;
     card[1].name = "pic/minions/minirobot.jpg";
@@ -76,7 +78,8 @@ int choose_card(sfRenderWindow *window)
     carden[0].name = "pic/minions/yeti.jpg";
     carden[0].pv = 5, carden[0].attack = 4, carden[0].cost = 4;
     carden[0].shield = false, carden[0].provoc = false;
-
+    
+    carden = realloc(carden, sizeof(card_t) * i);
     carden[1].pos.x = 600, carden[1].pos.y = 150;
     carden[1].save.x = 600, carden[1].save.y = 150;
     carden[1].name = "pic/minions/senjin.jpg";
@@ -90,6 +93,7 @@ int choose_card(sfRenderWindow *window)
 
 int reset(sfRenderWindow *window)
 {
+    my_name(window);
     choose_card(window);
     return (0);
 }

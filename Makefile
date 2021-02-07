@@ -8,6 +8,8 @@
 SRCS =	hs.c \
 		card_create.c \
 		combat.c \
+		create_minion.c \
+		get_input_keyboard.c \
 
 OBJS = $(SRCS:.c=.o)
 

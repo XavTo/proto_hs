@@ -34,5 +34,9 @@ typedef struct {
 
 int display_card(sfRenderWindow *window, card_t *card, card_t *carden);
 card_t *my_check_combat(sfRenderWindow *window, int i, int *a, card_t *card, card_t *carden1, card_t *carden2);
+card_t create_minion(card_t card, sfRenderWindow *window);
+int my_name(sfRenderWindow *window);
+int reset(sfRenderWindow *window);
+int choose_card(sfRenderWindow *window);
 
 #endif

@@ -44,10 +44,11 @@ card_t *my_attack(sfRenderWindow *window, card_t *card, card_t *carden1, card_t 
             if (card[i].shield == true) card[i].shield = false;
             else card[i].pv = card[i].pv - carden2->attack;
             carden2->pv = carden2->pv - card[i].attack;
-            if (card[i].pv <= 0) card[i].name = NULL;
-            if (carden2->pv <= 0) {
-                carden2->name = NULL, carden2->provoc = false;
+            if (card[i].pv <= 0) {
+                if (card[i + 1].name == NULL) card[i].name = NULL;
+                else my_swap(&card[i], &card[i + 1]), card[i + 1].name = NULL;
             }
+            if (carden2->pv <= 0) carden2->name = NULL, carden2->provoc = false;
         }
         i++;
     }
