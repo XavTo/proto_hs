@@ -16,27 +16,40 @@ int my_swap(card_t *card1, card_t *card2)
     *card2 = swap;
 }
 
+int my_check_attack(card_t *card, card_t *carden, int a)
+{
+    int i = 0;
+
+    while (card[i].filepath != NULL) {
+        if (card[i].pos.x >= carden[a].pos.x - 100 && card[i].pos.x <= carden[a].pos.x + 100
+            && card[i].pos.y >= carden[a].pos.y - 120 && card[i].pos.y <= carden[a].pos.y + 130 && carden[a].filepath!= NULL) {
+            if (carden[a + 1].provoc == true || carden[a - 1].provoc == true)
+                return (2);
+            return (1);
+        }
+        i++;
+    }
+    return (0);
+}
+
 card_t *my_attack(sfRenderWindow *window, card_t *card, card_t *carden1, card_t *carden2)
 {
     int i = 0;
-    while (card[i].name != NULL) {
+    while (card[i].filepath != NULL) {
         if (card[i].pos.x >= carden1->pos.x - 100 && card[i].pos.x <= carden1->pos.x + 100
-            && card[i].pos.y >= carden1->pos.y - 120 && card[i].pos.y <= carden1->pos.y + 130) {
-            if (carden2->provoc == true) {
-                printf("you can't attack this minios, another one got provocation\n");
-                break;
-            }
+            && card[i].pos.y >= carden1->pos.y - 120 && card[i].pos.y <= carden1->pos.y + 130 && carden1->filepath!= NULL) {
+            if (carden2->provoc == true) break;
             if (card[i].shield == true) card[i].shield = false;
             else card[i].pv = card[i].pv - carden1->attack;
             carden1->pv = carden1->pv - card[i].attack;
-            if (card[i].pv <= 0) card[i].name = NULL, carden1->provoc = false;
+            if (card[i].pv <= 0) card[i].filepath = NULL, carden1->provoc = false;
             if (carden1->pv <= 0) {
-                if (carden1->name == NULL) carden1->name = NULL;
-                else my_swap(carden1, carden2), carden2->name = NULL;
+                if (carden1->filepath== NULL) carden1 = NULL;
+                else my_swap(carden1, carden2), carden2->filepath= NULL;
             }
         }
         if (card[i].pos.x >= carden2->pos.x - 100 && card[i].pos.x <= carden2->pos.x + 100
-            && card[i].pos.y >= carden2->pos.y - 120 && card[i].pos.y <= carden2->pos.y + 130) {
+            && card[i].pos.y >= carden2->pos.y - 120 && card[i].pos.y <= carden2->pos.y + 130 && carden2->filepath!= NULL) {
                 if (carden1->provoc == true) {
                 printf("you can't attack this minios, another one got provocation\n");
                 break;
@@ -45,10 +58,10 @@ card_t *my_attack(sfRenderWindow *window, card_t *card, card_t *carden1, card_t 
             else card[i].pv = card[i].pv - carden2->attack;
             carden2->pv = carden2->pv - card[i].attack;
             if (card[i].pv <= 0) {
-                if (card[i + 1].name == NULL) card[i].name = NULL;
-                else my_swap(&card[i], &card[i + 1]), card[i + 1].name = NULL;
+                if (card[1].filepath == NULL) card[i].filepath = NULL;
+                else my_swap(&card[i], &card[i + 1]), card[i + 1].filepath = NULL;
             }
-            if (carden2->pv <= 0) carden2->name = NULL, carden2->provoc = false;
+            if (carden2->pv <= 0) carden2->filepath= NULL, carden2->provoc = false;
         }
         i++;
     }

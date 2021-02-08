@@ -56,9 +56,26 @@ int draw_text(card_t card, sfRenderWindow *window)
     free(status), free(str), sfText_destroy(text), sfFont_destroy(font);
 }
 
+int draw_name(card_t card, sfRenderWindow *window)
+{
+    sfFont* font = sfFont_createFromFile("font/font.ttf");
+    sfText* text = sfText_create();
+    card.pos.x += 35;
+    card.pos.y += 75;
+
+    sfText_setColor(text, sfBlack);
+    sfText_setString(text, card.name);
+    sfText_setFont(text, font);
+    sfText_setCharacterSize(text, 15);
+    sfText_setPosition(text, card.pos);
+    sfRenderWindow_drawText(window, text, NULL);
+    sfText_destroy(text), sfFont_destroy(font);
+    return (0);
+}
+
 int drawimg(char *str, sfRenderWindow *window, sfVector2f pos, card_t card)
 {
-    sfTexture *back = sfTexture_createFromFile(card.name, NULL);
+    sfTexture *back = sfTexture_createFromFile(card.filepath, NULL);
     sfSprite *my_spr = sfSprite_create();
     sfVector2f size = {0.1, 0.1};
     sfSprite_scale(my_spr, size);
@@ -72,25 +89,34 @@ int drawimg(char *str, sfRenderWindow *window, sfVector2f pos, card_t card)
 int display_card(sfRenderWindow *window, card_t *card, card_t *carden)
 {
     int i = 0;
-    sfTexture *back = sfTexture_createFromFile("pic/card_empty.png", NULL);
+    sfTexture *back = sfTexture_createFromFile("pic/card_empty_touch.png", NULL);
     sfSprite *my_spr = sfSprite_create();
     sfVector2f size = {0.4, 0.4};
     sfSprite_scale(my_spr, size);
-    while (carden[i].name != NULL) {
+    while (carden[i].filepath != NULL) {
+        if (my_check_attack(card, carden, i) != 0) {
+            if (my_check_attack(card, carden, i) == 1)
+                back = sfTexture_createFromFile("pic/card_empty_touch.png", NULL);
+            else back = sfTexture_createFromFile("pic/card_empty_cant.png", NULL);
+        }
+        else back = sfTexture_createFromFile("pic/card_empty.png", NULL);
         sfSprite_setPosition(my_spr, carden[i].pos);
         sfSprite_setTexture(my_spr, back, sfTrue);
-        drawimg(carden[i].name, window, carden[i].pos, carden[i]);
+        drawimg(carden[i].filepath, window, carden[i].pos, carden[i]);
         sfRenderWindow_drawSprite(window, my_spr, NULL);
-        draw_text(carden[i], window);
+        draw_text(carden[i], window), draw_name(carden[i], window);
         i++;
     }
     i = 0;
-    while (card[i].name != NULL) {
+    while (card[i].filepath != NULL) {
+        if (my_check_attack(carden, card, i) == 0)
+            back = sfTexture_createFromFile("pic/card_empty.png", NULL);
+        else back = sfTexture_createFromFile("pic/card_empty_touch.png", NULL);
         sfSprite_setPosition(my_spr, card[i].pos);
         sfSprite_setTexture(my_spr, back, sfTrue);
-        drawimg(card[i].name, window, card[i].pos, card[i]);
+        drawimg(card[i].filepath, window, card[i].pos, card[i]);
         sfRenderWindow_drawSprite(window, my_spr, NULL);
-        draw_text(card[i], window);
+        draw_text(card[i], window), draw_name(card[i], window);
         i++;
     }
     sfTexture_destroy(back), sfSprite_destroy(my_spr);

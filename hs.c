@@ -30,6 +30,8 @@ int my_replay(sfRenderWindow *window, int i)
 int my_game(sfRenderWindow *window, card_t *card, card_t *carden)
 {
     sfEvent event;
+    int fps = 0;
+    sfClock *clock = sfClock_create();
     int i = 0;
     int first = 0;
     int second = 0;
@@ -52,60 +54,65 @@ int my_game(sfRenderWindow *window, card_t *card, card_t *carden)
         my_replay(window, 0);
         display_card(window, card, carden);
         sfRenderWindow_display(window);
+        if (sfClock_getElapsedTime(clock).microseconds >= 1000000)
+            sfClock_restart(clock), printf("%d\n", fps), fps = 0;
+        fps++;
     }
 }
 
-int choose_card(sfRenderWindow *window)
+int choose_card(sfRenderWindow *window, char *str)
 {
     int i = 1;
     card_t *card = malloc(sizeof(card_t) * i);
     card_t *carden = malloc(sizeof(card_t) * i);
     card[0].pos.x = 400, card[0].pos.y = 300;
     card[0].save.x = 400, card[0].save.y = 300;
-    card[0].name = "pic/minions/magi.jpg";
+    card[0].filepath = "pic/minions/magi.jpg", card[0].name = str;
     card[0].pv = 7, card[0].attack = 6, card[0].cost = 6;
     card[0].shield = false, card[0].provoc = false;
 
     i++, card = realloc(card, sizeof(card_t) * i);
     card[1].pos.x = 600, card[1].pos.y = 300;
     card[1].save.x = 600, card[1].save.y = 300;
-    card[1].name = "pic/minions/minirobot.jpg";
+    card[1].filepath = "pic/minions/minirobot.jpg", card[1].name = "robot";
     card[1].pv = 2, card[1].attack = 2, card[1].cost = 2;
     card[1].shield = true, card[1].provoc = false;
 
     carden[0].pos.x = 400, carden[0].pos.y = 150;
     carden[0].save.x = 400, carden[0].save.y = 150;
-    carden[0].name = "pic/minions/yeti.jpg";
+    carden[0].filepath = "pic/minions/yeti.jpg", carden[0].name = "yeti";
     carden[0].pv = 5, carden[0].attack = 4, carden[0].cost = 4;
     carden[0].shield = false, carden[0].provoc = false;
     
     carden = realloc(carden, sizeof(card_t) * i);
     carden[1].pos.x = 600, carden[1].pos.y = 150;
     carden[1].save.x = 600, carden[1].save.y = 150;
-    carden[1].name = "pic/minions/senjin.jpg";
+    carden[1].filepath = "pic/minions/senjin.jpg", carden[1].name = "senjin";
     carden[1].pv = 5, carden[1].attack = 3, carden[1].cost = 4;
     carden[1].shield = false, carden[1].provoc = true;
 
-    card[2].name = NULL;
-    carden[2].name = NULL;
+    card[2].filepath = NULL;
+    carden[2].filepath = NULL;
     my_game(window, card, carden);
 }
 
 int reset(sfRenderWindow *window)
 {
-    my_name(window);
-    choose_card(window);
+    char *str = malloc(sizeof(char) * 2);
+    my_name(window, str, 0);
+    choose_card(window, str);
     return (0);
 }
 
 int main(int ac, char **av)
 {
     sfRenderWindow *window;
+    char *str = malloc(sizeof(char) * 2);
     sfEvent event;
     sfVideoMode video_m = {1080, 650, 32};
     window = sfRenderWindow_create(video_m, "Hs", sfClose | sfResize, NULL);
     sfRenderWindow_setFramerateLimit(window, 90);
     sfRenderWindow_clear(window, sfBlack);
-
-    choose_card(window);
+    my_name(window, str, 0);
+    choose_card(window, str);
 }
