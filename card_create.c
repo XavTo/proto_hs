@@ -77,7 +77,7 @@ int drawimg(char *str, sfRenderWindow *window, sfVector2f pos, card_t card)
 {
     sfTexture *back = sfTexture_createFromFile(card.filepath, NULL);
     sfSprite *my_spr = sfSprite_create();
-    sfVector2f size = {0.1, 0.1};
+    sfVector2f size = {0.7, 0.7};
     sfSprite_scale(my_spr, size);
     pos.x += 25, pos.y += 16;
     sfSprite_setPosition(my_spr, pos);
@@ -95,11 +95,12 @@ int display_card(sfRenderWindow *window, card_t *card, card_t *carden)
     sfSprite_scale(my_spr, size);
     while (carden[i].filepath != NULL) {
         if (my_check_attack(card, carden, i) != 0) {
+            sfTexture_destroy(back);
             if (my_check_attack(card, carden, i) == 1)
                 back = sfTexture_createFromFile("pic/card_empty_touch.png", NULL);
             else back = sfTexture_createFromFile("pic/card_empty_cant.png", NULL);
         }
-        else back = sfTexture_createFromFile("pic/card_empty.png", NULL);
+        else sfTexture_destroy(back), back = sfTexture_createFromFile("pic/card_empty.png", NULL);
         sfSprite_setPosition(my_spr, carden[i].pos);
         sfSprite_setTexture(my_spr, back, sfTrue);
         drawimg(carden[i].filepath, window, carden[i].pos, carden[i]);
@@ -110,8 +111,8 @@ int display_card(sfRenderWindow *window, card_t *card, card_t *carden)
     i = 0;
     while (card[i].filepath != NULL) {
         if (my_check_attack(carden, card, i) == 0)
-            back = sfTexture_createFromFile("pic/card_empty.png", NULL);
-        else back = sfTexture_createFromFile("pic/card_empty_touch.png", NULL);
+            sfTexture_destroy(back), back = sfTexture_createFromFile("pic/card_empty.png", NULL);
+        else sfTexture_destroy(back), back = sfTexture_createFromFile("pic/card_empty_touch.png", NULL);
         sfSprite_setPosition(my_spr, card[i].pos);
         sfSprite_setTexture(my_spr, back, sfTrue);
         drawimg(card[i].filepath, window, card[i].pos, card[i]);

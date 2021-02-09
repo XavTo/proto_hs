@@ -41,5 +41,6 @@ int reset(sfRenderWindow *window);
 int choose_card(sfRenderWindow *window, char *str);
 int my_check_attack(card_t *card, card_t *carden, int a);
 char *keyboard(char *str, int *i, int ret);
+char *my_itoa(int nb);
 
 #endif

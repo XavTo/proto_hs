@@ -9,6 +9,25 @@
 
 int reset(sfRenderWindow *window);
 
+int print_fps(sfRenderWindow *window, int fps)
+{
+    char *str = my_itoa(fps);
+    sfVector2f pos = {10, 10};
+    sfFont* font = sfFont_createFromFile("font/font.ttf");
+    sfText* text = sfText_create();
+
+    if (fps >= 60)
+        sfText_setColor(text, sfGreen);
+    else
+        sfText_setColor(text, sfRed);
+    sfText_setString(text, str);
+    sfText_setFont(text, font);
+    sfText_setCharacterSize(text, 40);
+    sfText_setPosition(text, pos);
+    sfRenderWindow_drawText(window, text, NULL);
+    sfText_destroy(text), sfFont_destroy(font);
+}
+
 int my_replay(sfRenderWindow *window, int i)
 {
     if (i == 1) {
@@ -35,6 +54,7 @@ int my_game(sfRenderWindow *window, card_t *card, card_t *carden)
     int i = 0;
     int first = 0;
     int second = 0;
+    int stock_fps = 30;
     sfTexture *back = sfTexture_createFromFile("pic/plateau.jpg", NULL);
     sfSprite *my_spr = sfSprite_create();
     sfVector2f size = {0.63, 0.63};
@@ -53,9 +73,10 @@ int my_game(sfRenderWindow *window, card_t *card, card_t *carden)
         sfRenderWindow_drawSprite(window, my_spr, NULL);
         my_replay(window, 0);
         display_card(window, card, carden);
+        print_fps(window, stock_fps);
         sfRenderWindow_display(window);
         if (sfClock_getElapsedTime(clock).microseconds >= 1000000)
-            sfClock_restart(clock), printf("%d\n", fps), fps = 0;
+            sfClock_restart(clock), stock_fps = fps, fps = 0;
         fps++;
     }
 }
@@ -104,7 +125,7 @@ int reset(sfRenderWindow *window)
     return (0);
 }
 
-int main(int ac, char **av)
+int main()
 {
     sfRenderWindow *window;
     char *str = malloc(sizeof(char) * 2);
