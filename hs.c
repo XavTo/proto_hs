@@ -120,7 +120,7 @@ int choose_card(sfRenderWindow *window, char *str)
 int reset(sfRenderWindow *window)
 {
     char *str = malloc(sizeof(char) * 2);
-    my_name(window, str, 0);
+    get_keyboard_input(window, str);
     choose_card(window, str);
     return (0);
 }
@@ -134,6 +134,6 @@ int main()
     window = sfRenderWindow_create(video_m, "Hs", sfClose | sfResize, NULL);
     sfRenderWindow_setFramerateLimit(window, 90);
     sfRenderWindow_clear(window, sfBlack);
-    my_name(window, str, 0);
+    get_keyboard_input(window, str);
     choose_card(window, str);
 }
